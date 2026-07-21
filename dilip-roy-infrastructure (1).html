@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roy Infrastructure — Dilip Roy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0e2333;
+    --navy-deep:#081521;
+    --paper:#eeeae0;
+    --paper-dim:#e2ddcf;
+    --steel:#4c6579;
+    --concrete:#8d8a7e;
+    --safety:#e3a412;
+    --rust:#b9451c;
+    --line: rgba(238,234,224,0.14);
+    --ink: #0e2333;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--safety);color:var(--navy-deep);}
+  a{color:inherit;text-decoration:none;}
+
+  h1,h2,h3,.display{
+    font-family:'Archivo Black', sans-serif;
+    text-transform:uppercase;
+    letter-spacing:-0.01em;
+    line-height:0.95;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.72rem;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    color:var(--rust);
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:22px;height:1px;
+    background:var(--rust);
+    display:inline-block;
+  }
+
+  /* grid texture */
+  .blueprint{
+    position:relative;
+    background-color:var(--navy);
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 44px 44px;
+  }
+  .contours{
+    position:absolute; inset:0;
+    pointer-events:none;
+    opacity:0.5;
+  }
+
+  /* NAV */
+  header{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:22px 5vw;
+    mix-blend-mode:normal;
+    transition:background .3s ease, padding .3s ease;
+  }
+  header.scrolled{
+    background:rgba(14,35,51,0.92);
+    backdrop-filter:blur(6px);
+    padding:14px 5vw;
+    border-bottom:1px solid var(--line);
+  }
+  .brand{
+    font-family:'Barlow Condensed', sans-serif;
+    font-weight:700;
+    font-size:1.25rem;
+    letter-spacing:0.02em;
+    color:var(--paper);
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .brand .mark{
+    width:30px;height:30px;
+    border:2px solid var(--safety);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'IBM Plex Mono';
+    font-size:0.7rem;
+    color:var(--safety);
+    transform:rotate(45deg);
+  }
+  .brand .mark span{transform:rotate(-45deg);}
+  nav ul{
+    list-style:none;
+    display:flex;
+    gap:34px;
+  }
+  nav a{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--paper);
+    opacity:0.75;
+    transition:opacity .2s;
+  }
+  nav a:hover{opacity:1; color:var(--safety);}
+  .nav-toggle{display:none;background:none;border:0;color:var(--paper);font-size:1.6rem;cursor:pointer;}
+
+  /* HERO */
+  .hero{
+    min-height:100vh;
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding:140px 5vw 80px;
+    color:var(--paper);
+    overflow:hidden;
+  }
+  .hero::after{
+    content:"";
+    position:absolute;
+    right:-6%;
+    bottom:-10%;
+    width:60vw; max-width:760px;
+    aspect-ratio:1/1;
+    background:radial-gradient(circle, rgba(227,164,18,0.14) 0%, rgba(227,164,18,0) 70%);
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns: 1.4fr 0.9fr;
+    gap:60px;
+    align-items:end;
+    position:relative;
+    z-index:2;
+  }
+  .hero h1{
+    font-size:clamp(2.6rem, 6.6vw, 6.2rem);
+    margin-top:18px;
+  }
+  .hero h1 em{
+    font-style:normal;
+    color:var(--safety);
+  }
+  .hero-sub{
+    font-size:1.05rem;
+    max-width:46ch;
+    color:var(--paper);
+    opacity:0.72;
+    margin-top:26px;
+    line-height:1.6;
+  }
+  .hero-cta{
+    display:flex;
+    gap:18px;
+    margin-top:38px;
+    flex-wrap:wrap;
+  }
+  .btn{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.78rem;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    padding:15px 26px;
+    border:1px solid var(--paper);
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    transition:all .25s ease;
+  }
+  .btn.solid{ background:var(--safety); border-color:var(--safety); color:var(--navy-deep); font-weight:600;}
+  .btn.solid:hover{background:var(--paper); border-color:var(--paper);}
+  .btn.ghost:hover{background:var(--paper); color:var(--navy-deep);}
+
+  .hero-coords{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.75rem;
+    color:var(--concrete);
+    border-left:1px solid var(--line);
+    padding-left:22px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .hero-coords b{color:var(--paper); display:block; font-size:1r.0rem;}
+
+  .scroll-cue{
+    position:absolute; bottom:34px; left:5vw;
+    font-family:'IBM Plex Mono'; font-size:0.7rem;
+    color:var(--concrete); letter-spacing:0.1em;
+    display:flex; align-items:center; gap:10px;
+  }
+  .scroll-cue .bar{width:1px;height:34px;background:var(--concrete); position:relative; overflow:hidden;}
+  .scroll-cue .bar::after{content:"";position:absolute;top:-100%;left:0;width:100%;height:100%;background:var(--safety);animation:slide 2.2s ease-in-out infinite;}
+  @keyframes slide{ 50%{top:100%;} 100%{top:100%;} }
+
+  section{padding:110px 5vw;}
+  .section-head{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:40px;
+    margin-bottom:64px;
+    align-items:end;
+  }
+  .section-head h2{font-size:clamp(1.9rem,3.6vw,3rem); margin-top:14px;}
+  .section-head p{color:var(--steel); font-size:1rem; line-height:1.6; max-width:44ch;}
+
+  /* STATS */
+  .stats{
+    background:var(--navy-deep);
+    color:var(--paper);
+    padding:70px 5vw;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+  }
+  .stat{
+    border-left:1px solid var(--line);
+    padding-left:22px;
+  }
+  .stat b{
+    font-family:'Archivo Black';
+    font-size:clamp(2rem,4vw,3.2rem);
+    color:var(--safety);
+    display:block;
+  }
+  .stat span{
+    font-family:'IBM Plex Mono';
+    font-size:0.72rem;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--concrete);
+  }
+
+  /* SERVICES */
+  .services{background:var(--paper);}
+  .service-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:1px;
+    background:var(--concrete);
+    border:1px solid var(--concrete);
+  }
+  .service{
+    background:var(--paper);
+    padding:38px 30px;
+    min-height:250px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    transition:background .25s;
+  }
+  .service:hover{background:var(--navy); color:var(--paper);}
+  .service:hover .service-num{color:var(--safety);}
+  .service:hover svg{stroke:var(--paper);}
+  .service-num{
+    font-family:'IBM Plex Mono';
+    font-size:0.78rem;
+    color:var(--rust);
+  }
+  .service h3{
+    font-family:'Barlow Condensed';
+    font-weight:700;
+    font-size:1.5rem;
+    text-transform:none;
+    margin:16px 0 10px;
+  }
+  .service p{font-size:0.92rem; color:inherit; opacity:0.8; line-height:1.5;}
+  .service svg{width:34px;height:34px;stroke:var(--navy); fill:none; stroke-width:1.4;}
+
+  /* PROCESS */
+  .process{background:var(--paper-dim);}
+  .process-row{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:0;
+    border-top:1px solid var(--concrete);
+  }
+  .step{
+    padding:34px 24px 34px 0;
+    border-right:1px solid var(--concrete);
+    position:relative;
+  }
+  .step:last-child{border-right:none;}
+  .step .n{
+    font-family:'IBM Plex Mono';
+    color:var(--rust);
+    font-size:0.85rem;
+  }
+  .step h4{
+    font-family:'Barlow Condensed';
+    font-weight:700;
+    font-size:1.3rem;
+    margin:14px 0 8px;
+  }
+  .step p{font-size:0.88rem; color:var(--steel); line-height:1.5;}
+
+  /* PROJECTS */
+  .projects{background:var(--navy); color:var(--paper);}
+  .projects .section-head p{color:var(--concrete);}
+  .project-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:26px;
+  }
+  .project{
+    border:1px solid var(--line);
+    padding:26px;
+    min-height:300px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+  }
+  .project .tag{
+    font-family:'IBM Plex Mono';
+    font-size:0.68rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--safety);
+  }
+  .project h3{
+    font-family:'Barlow Condensed';
+    font-weight:700;
+    font-size:1.7rem;
+    text-transform:none;
+    margin-top:14px;
+  }
+  .project p{font-size:0.86rem; color:var(--concrete); margin-top:10px; line-height:1.5;}
+  .project svg{width:100%; height:110px; margin-top:20px; stroke:var(--concrete); fill:none; stroke-width:1;}
+  .project:hover svg{stroke:var(--safety);}
+
+  /* ABOUT / OWNER */
+  .about{
+    background:var(--paper);
+    display:grid;
+    grid-template-columns: 0.85fr 1.15fr;
+    gap:70px;
+    align-items:center;
+  }
+  .owner-card{
+    background:var(--navy);
+    color:var(--paper);
+    padding:44px 36px;
+    position:relative;
+  }
+  .owner-card::before{
+    content:"";
+    position:absolute; top:14px; left:14px; right:14px; bottom:14px;
+    border:1px solid var(--line);
+    pointer-events:none;
+  }
+  .owner-portrait{
+    width:100%;
+    aspect-ratio:4/5;
+    background:
+      radial-gradient(circle at 30% 20%, rgba(227,164,18,0.25), transparent 60%),
+      linear-gradient(160deg, #1a3247, #0a1c29);
+    display:flex;
+    align-items:flex-end;
+    padding:22px;
+    margin-bottom:22px;
+    position:relative;
+    overflow:hidden;
+  }
+  .owner-portrait svg{position:absolute; inset:0; width:100%; height:100%; opacity:0.5;}
+  .owner-portrait .init{
+    font-family:'Archivo Black';
+    font-size:4.5rem;
+    color:rgba(238,234,224,0.85);
+    z-index:2;
+  }
+  .owner-card h3{
+    font-family:'Barlow Condensed';
+    font-weight:700;
+    text-transform:none;
+    font-size:1.6rem;
+  }
+  .owner-card .role{
+    font-family:'IBM Plex Mono';
+    font-size:0.72rem;
+    color:var(--safety);
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    margin-top:6px;
+    display:block;
+  }
+  .about-copy h2{font-size:clamp(1.9rem,3.4vw,2.8rem);}
+  .about-copy p{
+    font-size:1rem;
+    line-height:1.75;
+    color:var(--steel);
+    margin-top:22px;
+    max-width:58ch;
+  }
+  .about-copy blockquote{
+    margin-top:30px;
+    padding-left:22px;
+    border-left:2px solid var(--safety);
+    font-family:'Barlow Condensed';
+    font-size:1.35rem;
+    font-weight:600;
+    color:var(--navy);
+    line-height:1.4;
+  }
+  .about-copy .sign{
+    margin-top:16px;
+    font-family:'IBM Plex Mono';
+    font-size:0.8rem;
+    color:var(--rust);
+  }
+
+  /* CONTACT */
+  .contact{
+    background:var(--navy-deep);
+    color:var(--paper);
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:60px;
+  }
+  .contact h2{font-size:clamp(1.9rem,3.6vw,2.9rem);}
+  .contact-info p{color:var(--concrete); margin-top:20px; line-height:1.7; max-width:40ch;}
+  .info-list{margin-top:34px; display:flex; flex-direction:column; gap:18px;}
+  .info-list div{border-top:1px solid var(--line); padding-top:14px;}
+  .info-list span{font-family:'IBM Plex Mono'; font-size:0.68rem; color:var(--safety); text-transform:uppercase; letter-spacing:0.08em;}
+  .info-list p{margin-top:6px; font-size:0.95rem; color:var(--paper); max-width:none;}
+
+  form{display:flex; flex-direction:column; gap:18px;}
+  .field{display:flex; flex-direction:column; gap:8px;}
+  .field label{font-family:'IBM Plex Mono'; font-size:0.68rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--concrete);}
+  .field input, .field textarea{
+    background:transparent;
+    border:none;
+    border-bottom:1px solid var(--line);
+    color:var(--paper);
+    font-family:'Inter';
+    font-size:1rem;
+    padding:10px 2px;
+    resize:none;
+  }
+  .field input:focus, .field textarea:focus{outline:none; border-color:var(--safety);}
+  form .btn{align-self:flex-start; margin-top:10px; background:transparent; border-color:var(--paper); color:var(--paper);}
+  form .btn:hover{background:var(--safety); border-color:var(--safety); color:var(--navy-deep);}
+
+  footer{
+    background:var(--navy-deep);
+    color:var(--concrete);
+    padding:30px 5vw;
+    border-top:1px solid var(--line);
+    display:flex;
+    justify-content:space-between;
+    font-family:'IBM Plex Mono';
+    font-size:0.7rem;
+    letter-spacing:0.04em;
+  }
+
+  .reveal{opacity:0; transform:translateY(24px); transition:opacity .7s ease, transform .7s ease;}
+  .reveal.show{opacity:1; transform:none;}
+
+  @media (max-width: 900px){
+    nav, .nav-toggle{ }
+    nav ul{
+      position:fixed; top:0; right:0; height:100vh; width:70vw;
+      background:var(--navy-deep);
+      flex-direction:column;
+      justify-content:center;
+      padding:40px;
+      transform:translateX(100%);
+      transition:transform .35s ease;
+      gap:28px;
+    }
+    nav ul.open{transform:translateX(0);}
+    .nav-toggle{display:block;}
+    .hero-grid, .about, .contact{grid-template-columns:1fr;}
+    .hero-coords{border-left:none; border-top:1px solid var(--line); padding-left:0; padding-top:18px;}
+    .stats{grid-template-columns:repeat(2,1fr); gap:30px;}
+    .service-grid, .project-grid{grid-template-columns:1fr;}
+    .process-row{grid-template-columns:1fr;}
+    .step{border-right:none; border-bottom:1px solid var(--concrete);}
+    .section-head{grid-template-columns:1fr;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important; transition:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<header id="header">
+  <div class="brand"><span class="mark"><span>DR</span></span> ROY INFRA</div>
+  <nav>
+    <ul id="navList">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#process">Process</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+  <button class="nav-toggle" id="navToggle" aria-label="Menu">&#9776;</button>
+</header>
+
+<section class="hero blueprint">
+  <div class="hero-grid">
+    <div>
+      <div class="eyebrow">EST. INFRASTRUCTURE EPC &mdash; ROADS / BRIDGES / WATER / URBAN WORKS</div>
+      <h1>WE BUILD<br>WHAT A REGION<br>STANDS <em>ON.</em></h1>
+      <p class="hero-sub">Roy Infrastructure plans, engineers and delivers public and industrial infrastructure — from highway stretches to water systems — under the direct oversight of founder Dilip Roy.</p>
+      <div class="hero-cta">
+        <a href="#projects" class="btn solid">View Projects &rarr;</a>
+        <a href="#contact" class="btn ghost">Start a Project</a>
+      </div>
+    </div>
+    <div class="hero-coords">
+      <div><b>26.14&deg; N / 91.73&deg; E</b>Registered site office</div>
+      <div><b>Dilip Roy</b>Founder &amp; Managing Director</div>
+      <div><b>EPC + PMC</b>Design-build &amp; consultancy</div>
+    </div>
+  </div>
+  <div class="scroll-cue"><div class="bar"></div>SCROLL</div>
+</section>
+
+<div class="stats reveal">
+  <div class="stat"><b>18+</b><span>Years in Execution</span></div>
+  <div class="stat"><b>140</b><span>Projects Delivered</span></div>
+  <div class="stat"><b>620 km</b><span>Roads &amp; Corridors Built</span></div>
+  <div class="stat"><b>7</b><span>States of Operation</span></div>
+</div>
+
+<section id="services" class="services">
+  <div class="section-head reveal">
+    <div class="eyebrow">Capabilities</div>
+    <div></div>
+  </div>
+  <div class="section-head" style="margin-top:-90px;">
+    <h2 class="reveal">Every layer of the build, in-house.</h2>
+    <p class="reveal">From survey pegs to final handover, Roy Infrastructure runs design, construction and quality control as one accountable chain — not a set of subcontracted guesses.</p>
+  </div>
+  <div class="service-grid reveal">
+    <div class="service">
+      <div>
+        <div class="service-num">01</div>
+        <svg viewBox="0 0 48 48"><path d="M4 40L20 8l6 12 6-8 12 28z"/></svg>
+      </div>
+      <div>
+        <h3>Roads &amp; Highways</h3>
+        <p>Bituminous and concrete carriageways, widening, and rural connectivity works to national specification.</p>
+      </div>
+    </div>
+    <div class="service">
+      <div>
+        <div class="service-num">02</div>
+        <svg viewBox="0 0 48 48"><path d="M4 34h40M8 34V20l8-6M40 34V20l-8-6M16 14v20M32 14v20"/></svg>
+      </div>
+      <div>
+        <h3>Bridges &amp; Culverts</h3>
+        <p>Span design, foundation engineering and construction for river crossings and grade separators.</p>
+      </div>
+    </div>
+    <div class="service">
+      <div>
+        <div class="service-num">03</div>
+        <svg viewBox="0 0 48 48"><path d="M24 6c8 8 12 14 12 20a12 12 0 1 1-24 0c0-6 4-12 12-20z"/></svg>
+      </div>
+      <div>
+        <h3>Water &amp; Irrigation</h3>
+        <p>Pipelines, treatment works, and canal-based irrigation systems for municipal and agricultural supply.</p>
+      </div>
+    </div>
+    <div class="service">
+      <div>
+        <div class="service-num">04</div>
+        <svg viewBox="0 0 48 48"><rect x="8" y="10" width="12" height="28"/><rect x="24" y="18" width="16" height="20"/></svg>
+      </div>
+      <div>
+        <h3>Urban Infrastructure</h3>
+        <p>Drainage, street-lighting corridors, public buildings and township-level civil works.</p>
+      </div>
+    </div>
+    <div class="service">
+      <div>
+        <div class="service-num">05</div>
+        <svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="16"/><path d="M24 8v6M24 34v6M8 24h6M34 24h6"/></svg>
+      </div>
+      <div>
+        <h3>EPC Contracting</h3>
+        <p>Single-point engineering, procurement and construction delivery under fixed-scope contracts.</p>
+      </div>
+    </div>
+    <div class="service">
+      <div>
+        <div class="service-num">06</div>
+        <svg viewBox="0 0 48 48"><path d="M6 40l8-8 6 6 10-14 12 16"/><circle cx="14" cy="32" r="2"/><circle cx="20" cy="38" r="2"/><circle cx="30" cy="24" r="2"/></svg>
+      </div>
+      <div>
+        <h3>Project Management</h3>
+        <p>Independent PMC oversight — scheduling, quality audits and cost control for third-party sites.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="process" class="process">
+  <div class="section-head reveal">
+    <div>
+      <div class="eyebrow">Sequence</div>
+      <h2>From survey peg to handover.</h2>
+    </div>
+    <p>A fixed four-stage sequence keeps every site — regardless of scale — accountable to the same schedule and the same site register.</p>
+  </div>
+  <div class="process-row reveal">
+    <div class="step">
+      <div class="n">STAGE 01</div>
+      <h4>Survey &amp; Design</h4>
+      <p>Topographic survey, soil testing, and structural design validated against site conditions.</p>
+    </div>
+    <div class="step">
+      <div class="n">STAGE 02</div>
+      <h4>Approvals &amp; Mobilisation</h4>
+      <p>Statutory clearances secured, site mobilised, and material sourcing locked to specification.</p>
+    </div>
+    <div class="step">
+      <div class="n">STAGE 03</div>
+      <h4>Construction &amp; Quality</h4>
+      <p>Phased execution with third-party material testing at every pour and every layer.</p>
+    </div>
+    <div class="step">
+      <div class="n">STAGE 04</div>
+      <h4>Handover &amp; Maintenance</h4>
+      <p>As-built documentation delivered, with defect-liability support through the maintenance period.</p>
+    </div>
+  </div>
+</section>
+
+<section id="projects" class="projects">
+  <div class="section-head reveal">
+    <div>
+      <div class="eyebrow">Selected Work</div>
+      <h2>Built on the ground.</h2>
+    </div>
+    <p>A sample of the sites currently under execution or recently handed over.</p>
+  </div>
+  <div class="project-grid reveal">
+    <div class="project">
+      <div>
+        <div class="tag">Roads / 24 km</div>
+        <h3>NH Widening &amp; Strengthening</h3>
+        <p>Two-lane to four-lane conversion with new drainage and shoulder works.</p>
+      </div>
+      <svg viewBox="0 0 200 100"><path d="M0 80 Q60 20 200 60" stroke-dasharray="6 6"/><path d="M0 90 Q60 40 200 76"/></svg>
+    </div>
+    <div class="project">
+      <div>
+        <div class="tag">Bridge / 340 m span</div>
+        <h3>River Crossing, Girder Bridge</h3>
+        <p>Pre-stressed concrete girder bridge replacing a seasonal ferry crossing.</p>
+      </div>
+      <svg viewBox="0 0 200 100"><path d="M10 70h180M30 70V40M60 70V25M100 70V15M140 70V25M170 70V40M10 70 30 40M30 40 60 25M60 25 100 15M100 15 140 25M140 25 170 40M170 40 190 70"/></svg>
+    </div>
+    <div class="project">
+      <div>
+        <div class="tag">Water / 12 MLD</div>
+        <h3>Municipal Treatment Plant</h3>
+        <p>Intake, treatment and distribution network serving a district headquarters town.</p>
+      </div>
+      <svg viewBox="0 0 200 100"><circle cx="60" cy="55" r="30"/><path d="M60 25v-10M90 55h60M150 40v30M150 40h20M150 70h20"/></svg>
+    </div>
+  </div>
+</section>
+
+<section id="about" class="about">
+  <div class="reveal">
+    <div class="owner-card">
+      <div class="owner-portrait">
+        <svg viewBox="0 0 200 100"><path d="M0 90 L40 30 L70 60 L110 10 L150 50 L200 20" stroke="#e3a412" stroke-width="1" fill="none"/></svg>
+        <span class="init">DR</span>
+      </div>
+      <h3>Dilip Roy</h3>
+      <span class="role">Founder &amp; Managing Director</span>
+    </div>
+  </div>
+  <div class="about-copy reveal">
+    <div class="eyebrow">The Founder</div>
+    <h2>Site-first, from the first contract to the last.</h2>
+    <p>Dilip Roy founded Roy Infrastructure on a simple working rule: every commitment made in a tender is a commitment made on-site, and the two should never drift apart. That principle has carried the firm from single-culvert contracts to multi-kilometre highway and water infrastructure packages.</p>
+    <p>He continues to be directly involved in project planning and quality sign-off across all active sites, working alongside site engineers rather than at a distance from them.</p>
+    <blockquote>"An infrastructure company is judged years after handover — not on the day of it. We build for that inspection."</blockquote>
+    <div class="sign">— Dilip Roy</div>
+  </div>
+</section>
+
+<section id="contact" class="contact">
+  <div class="contact-info reveal">
+    <div class="eyebrow">Get in touch</div>
+    <h2>Tell us about the site.</h2>
+    <p>For tenders, EPC proposals, or project management enquiries, reach the office directly or send details through the form.</p>
+    <div class="info-list">
+      <div><span>Office</span><p>Roy Infrastructure, Guwahati, Assam</p></div>
+      <div><span>Phone</span><p>+91 XXXXX XXXXX</p></div>
+      <div><span>Email</span><p>contact@royinfra.example</p></div>
+    </div>
+  </div>
+  <form class="reveal" onsubmit="event.preventDefault(); this.querySelector('.btn').textContent='Sent — we will respond shortly';">
+    <div class="field">
+      <label for="name">Name</label>
+      <input id="name" type="text" required>
+    </div>
+    <div class="field">
+      <label for="org">Organisation</label>
+      <input id="org" type="text">
+    </div>
+    <div class="field">
+      <label for="msg">Project details</label>
+      <textarea id="msg" rows="4" required></textarea>
+    </div>
+    <button type="submit" class="btn">Send Enquiry &rarr;</button>
+  </form>
+</section>
+
+<footer>
+  <span>&copy; 2026 Roy Infrastructure. All rights reserved.</span>
+  <span>Founder: Dilip Roy</span>
+</footer>
+
+<script>
+  const header = document.getElementById('header');
+  window.addEventListener('scroll', () => {
+    header.classList.toggle('scrolled', window.scrollY > 40);
+  });
+
+  const navToggle = document.getElementById('navToggle');
+  const navList = document.getElementById('navList');
+  navToggle.addEventListener('click', () => navList.classList.toggle('open'));
+  navList.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navList.classList.remove('open')));
+
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('show'); });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
