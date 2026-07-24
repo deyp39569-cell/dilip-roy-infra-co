@@ -6,18 +6,19 @@
 <title>Roy Infrastructure — Dilip Roy</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
     --navy:#0e2333;
     --navy-deep:#081521;
-    --paper:#eeeae0;
-    --paper-dim:#e2ddcf;
-    --steel:#4c6579;
-    --concrete:#8d8a7e;
-    --safety:#e3a412;
-    --rust:#b9451c;
-    --line: rgba(238,234,224,0.14);
+    --paper:#f3f0e6;
+    --paper-dim:#e8e2d2;
+    --steel:#586b78;
+    --concrete:#b9b2a0;
+    --safety:#c9a24b;
+    --safety-bright:#e6c470;
+    --rust:#a8703a;
+    --line: rgba(243,240,230,0.13);
     --ink: #0e2333;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
@@ -31,11 +32,17 @@
   ::selection{background:var(--safety);color:var(--navy-deep);}
   a{color:inherit;text-decoration:none;}
 
-  h1,h2,h3,.display{
+  h1,.display{
     font-family:'Archivo Black', sans-serif;
     text-transform:uppercase;
     letter-spacing:-0.01em;
     line-height:0.95;
+  }
+  h2,h3,h4{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    letter-spacing:-0.01em;
+    line-height:1.05;
   }
   .eyebrow{
     font-family:'IBM Plex Mono', monospace;
@@ -138,7 +145,7 @@
     bottom:-10%;
     width:60vw; max-width:760px;
     aspect-ratio:1/1;
-    background:radial-gradient(circle, rgba(227,164,18,0.14) 0%, rgba(227,164,18,0) 70%);
+    background:radial-gradient(circle, rgba(201,162,75,0.16) 0%, rgba(201,162,75,0) 70%);
   }
   .hero-grid{
     display:grid;
@@ -196,7 +203,7 @@
     flex-direction:column;
     gap:10px;
   }
-  .hero-coords b{color:var(--paper); display:block; font-size:1r.0rem;}
+  .hero-coords b{color:var(--paper); display:block; font-size:1.05rem;}
 
   .scroll-cue{
     position:absolute; bottom:34px; left:5vw;
@@ -251,21 +258,21 @@
   .service-grid{
     display:grid;
     grid-template-columns:repeat(3,1fr);
-    gap:1px;
-    background:var(--concrete);
-    border:1px solid var(--concrete);
+    gap:24px;
   }
   .service{
     background:var(--paper);
-    padding:38px 30px;
+    padding:38px 32px;
     min-height:250px;
     display:flex;
     flex-direction:column;
     justify-content:space-between;
-    transition:background .25s;
+    border:1px solid rgba(14,35,51,0.09);
+    box-shadow:0 18px 40px -28px rgba(14,35,51,0.35);
+    transition:background .3s ease, transform .3s ease, box-shadow .3s ease;
   }
-  .service:hover{background:var(--navy); color:var(--paper);}
-  .service:hover .service-num{color:var(--safety);}
+  .service:hover{background:var(--navy); color:var(--paper); transform:translateY(-4px); box-shadow:0 24px 48px -20px rgba(14,35,51,0.45);}
+  .service:hover .service-num{color:var(--safety-bright);}
   .service:hover svg{stroke:var(--paper);}
   .service-num{
     font-family:'IBM Plex Mono';
@@ -273,10 +280,8 @@
     color:var(--rust);
   }
   .service h3{
-    font-family:'Barlow Condensed';
-    font-weight:700;
-    font-size:1.5rem;
-    text-transform:none;
+    font-weight:600;
+    font-size:1.55rem;
     margin:16px 0 10px;
   }
   .service p{font-size:0.92rem; color:inherit; opacity:0.8; line-height:1.5;}
@@ -302,12 +307,63 @@
     font-size:0.85rem;
   }
   .step h4{
-    font-family:'Barlow Condensed';
-    font-weight:700;
-    font-size:1.3rem;
+    font-weight:600;
+    font-size:1.35rem;
     margin:14px 0 8px;
   }
   .step p{font-size:0.88rem; color:var(--steel); line-height:1.5;}
+
+  /* PRODUCTS */
+  .products{background:var(--paper-dim);}
+  .product-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:26px;
+  }
+  .product-card{
+    background:var(--paper);
+    border:1px solid rgba(14,35,51,0.08);
+    box-shadow:0 20px 44px -30px rgba(14,35,51,0.4);
+    display:flex;
+    flex-direction:column;
+    transition:transform .3s ease, box-shadow .3s ease;
+  }
+  .product-card:hover{transform:translateY(-4px); box-shadow:0 26px 50px -22px rgba(14,35,51,0.45);}
+  .product-image{
+    aspect-ratio:4/3;
+    background:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px),
+      linear-gradient(160deg, #d8d3c3, #c7c2ae);
+    background-size: 22px 22px, 22px 22px, cover;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+  }
+  .product-image svg{width:64px; height:64px; stroke:var(--steel); fill:none; stroke-width:1.2; opacity:0.7;}
+  .product-body{
+    padding:26px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    flex:1;
+  }
+  .product-body h3{
+    font-weight:600;
+    font-size:1.45rem;
+  }
+  .product-body p{font-size:0.88rem; color:var(--steel); line-height:1.5; flex:1;}
+  .product-price{
+    font-family:'IBM Plex Mono';
+    font-size:1.1rem;
+    color:var(--rust);
+    font-weight:500;
+    margin-top:6px;
+  }
+  .product-price span{font-size:0.68rem; color:var(--concrete); text-transform:uppercase; letter-spacing:0.06em; display:block; margin-bottom:4px;}
+  .product-body .btn{margin-top:8px; align-self:flex-start; border-color:var(--navy); font-size:0.7rem; padding:11px 20px;}
+  .product-body .btn:hover{background:var(--navy); color:var(--paper);}
 
   /* PROJECTS */
   .projects{background:var(--navy); color:var(--paper);}
@@ -318,25 +374,26 @@
     gap:26px;
   }
   .project{
-    border:1px solid var(--line);
-    padding:26px;
+    border:1px solid rgba(243,240,230,0.14);
+    background:rgba(243,240,230,0.02);
+    padding:28px;
     min-height:300px;
     display:flex;
     flex-direction:column;
     justify-content:space-between;
+    transition:border-color .3s ease, background .3s ease;
   }
+  .project:hover{border-color:var(--safety); background:rgba(201,162,75,0.05);}
   .project .tag{
     font-family:'IBM Plex Mono';
     font-size:0.68rem;
     letter-spacing:0.08em;
     text-transform:uppercase;
-    color:var(--safety);
+    color:var(--safety-bright);
   }
   .project h3{
-    font-family:'Barlow Condensed';
-    font-weight:700;
-    font-size:1.7rem;
-    text-transform:none;
+    font-weight:600;
+    font-size:1.75rem;
     margin-top:14px;
   }
   .project p{font-size:0.86rem; color:var(--concrete); margin-top:10px; line-height:1.5;}
@@ -356,6 +413,7 @@
     color:var(--paper);
     padding:44px 36px;
     position:relative;
+    box-shadow:0 30px 60px -30px rgba(14,35,51,0.5);
   }
   .owner-card::before{
     content:"";
@@ -367,7 +425,7 @@
     width:100%;
     aspect-ratio:4/5;
     background:
-      radial-gradient(circle at 30% 20%, rgba(227,164,18,0.25), transparent 60%),
+      radial-gradient(circle at 30% 20%, rgba(201,162,75,0.28), transparent 60%),
       linear-gradient(160deg, #1a3247, #0a1c29);
     display:flex;
     align-items:flex-end;
@@ -384,10 +442,8 @@
     z-index:2;
   }
   .owner-card h3{
-    font-family:'Barlow Condensed';
-    font-weight:700;
-    text-transform:none;
-    font-size:1.6rem;
+    font-weight:600;
+    font-size:1.7rem;
   }
   .owner-card .role{
     font-family:'IBM Plex Mono';
@@ -410,11 +466,12 @@
     margin-top:30px;
     padding-left:22px;
     border-left:2px solid var(--safety);
-    font-family:'Barlow Condensed';
-    font-size:1.35rem;
-    font-weight:600;
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    font-size:1.45rem;
+    font-weight:500;
     color:var(--navy);
-    line-height:1.4;
+    line-height:1.45;
   }
   .about-copy .sign{
     margin-top:16px;
@@ -487,7 +544,7 @@
     .hero-grid, .about, .contact{grid-template-columns:1fr;}
     .hero-coords{border-left:none; border-top:1px solid var(--line); padding-left:0; padding-top:18px;}
     .stats{grid-template-columns:repeat(2,1fr); gap:30px;}
-    .service-grid, .project-grid{grid-template-columns:1fr;}
+    .service-grid, .project-grid, .product-grid{grid-template-columns:1fr;}
     .process-row{grid-template-columns:1fr;}
     .step{border-right:none; border-bottom:1px solid var(--concrete);}
     .section-head{grid-template-columns:1fr;}
@@ -505,6 +562,7 @@
   <nav>
     <ul id="navList">
       <li><a href="#services">Services</a></li>
+      <li><a href="#products">Products</a></li>
       <li><a href="#process">Process</a></li>
       <li><a href="#projects">Projects</a></li>
       <li><a href="#about">About</a></li>
@@ -526,7 +584,7 @@
       </div>
     </div>
     <div class="hero-coords">
-      <div><b>26.14&deg; N / 91.73&deg; E</b>Registered site office</div>
+      <div><b>26.23&deg; N / 91.64&deg; E</b>Registered site office, Changsari</div>
       <div><b>Dilip Roy</b>Founder &amp; Managing Director</div>
       <div><b>EPC + PMC</b>Design-build &amp; consultancy</div>
     </div>
@@ -613,24 +671,52 @@
     </div>
   </div>
 </section>
-<section id="products" style="padding:110px 5vw;background:#e2ddcf;">
-  <div style="margin-bottom:50px;">
-    <div style="font-family:'IBM Plex Mono',monospace;font-size:0.72rem;letter-spacing:0.18em;text-transform:uppercase;color:#b9451c;">Products</div>
-    <h2 style="font-family:'Archivo Black',sans-serif;text-transform:uppercase;font-size:clamp(1.9rem,3.6vw,3rem);margin-top:14px;color:#0e2333;">Ready-supply materials.</h2>
+
+<section id="products" class="products">
+  <div class="section-head reveal">
+    <div>
+      <div class="eyebrow">Products</div>
+      <h2>Ready-supply materials.</h2>
+    </div>
+    <p>Alongside project execution, Roy Infra supplies core construction materials directly. Prices are indicative — confirm current rates before ordering.</p>
   </div>
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:26px;">
-    <div style="background:#eeeae0;border:1px solid #8d8a7e;">
-      <div style="aspect-ratio:4/3;background:#d8d3c3;"></div>
-      <div style="padding:26px;">
-        <h3 style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1.4rem;">Product Name 1</h3>
-        <p style="font-size:0.88rem;color:#4c6579;line-height:1.5;margin:10px 0;">Short description here.</p>
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:1.1rem;color:#b9451c;">&#8377; 0,000 / unit</div>
+  <div class="product-grid reveal">
+    <div class="product-card">
+      <div class="product-image">
+        <svg viewBox="0 0 48 48"><rect x="6" y="18" width="36" height="20"/><path d="M6 18l6-8h24l6 8"/></svg>
+      </div>
+      <div class="product-body">
+        <h3>Product Name 1</h3>
+        <p>Short description of this product — specification, grade, or size details go here.</p>
+        <div class="product-price"><span>Price</span>&#8377; 0,000 / unit</div>
+        <a href="#contact" class="btn">Enquire &rarr;</a>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-image">
+        <svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="16"/><path d="M24 8v32M8 24h32"/></svg>
+      </div>
+      <div class="product-body">
+        <h3>Product Name 2</h3>
+        <p>Short description of this product — specification, grade, or size details go here.</p>
+        <div class="product-price"><span>Price</span>&#8377; 0,000 / unit</div>
+        <a href="#contact" class="btn">Enquire &rarr;</a>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-image">
+        <svg viewBox="0 0 48 48"><path d="M8 40V16l16-8 16 8v24"/><path d="M18 40V26h12v14"/></svg>
+      </div>
+      <div class="product-body">
+        <h3>Product Name 3</h3>
+        <p>Short description of this product — specification, grade, or size details go here.</p>
+        <div class="product-price"><span>Price</span>&#8377; 0,000 / unit</div>
+        <a href="#contact" class="btn">Enquire &rarr;</a>
       </div>
     </div>
   </div>
 </section>
 
-</parameter>
 <section id="process" class="process">
   <div class="section-head reveal">
     <div>
@@ -703,7 +789,7 @@
   <div class="reveal">
     <div class="owner-card">
       <div class="owner-portrait">
-        <svg viewBox="0 0 200 100"><path d="M0 90 L40 30 L70 60 L110 10 L150 50 L200 20" stroke="#e3a412" stroke-width="1" fill="none"/></svg>
+        <svg viewBox="0 0 200 100"><path d="M0 90 L40 30 L70 60 L110 10 L150 50 L200 20" stroke="#c9a24b" stroke-width="1" fill="none"/></svg>
         <span class="init">DR</span>
       </div>
       <h3>Dilip Roy</h3>
@@ -726,7 +812,7 @@
     <h2>Tell us about the site.</h2>
     <p>For tenders, EPC proposals, or project management enquiries, reach the office directly or send details through the form.</p>
     <div class="info-list">
-      <div><span>Office</span><p>Roy Infrastructure, Guwahati, Assam</p></div>
+      <div><span>Office</span><p>Roy Infrastructure, Changsari, Assam</p></div>
       <div><span>Phone</span><p>+91 XXXXX XXXXX</p></div>
       <div><span>Email</span><p>contact@royinfra.example</p></div>
     </div>
